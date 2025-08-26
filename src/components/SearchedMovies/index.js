@@ -59,7 +59,7 @@ class SearchedMovies extends Component {
     const {movies} = this.state
     return (
       <div className="home-container">
-        <h2>Searched Movies</h2>
+        <h1>Searched Movies</h1>
         <div className="movies-grid">
           {movies.map(movie => (
             <MovieCard key={movie.id} movie={movie} />
