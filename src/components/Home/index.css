@@ -105,9 +105,7 @@
   overflow: hidden;
   cursor: pointer;
   perspective: 1000px;
-  transition:
-    transform 0.4s ease,
-    box-shadow 0.4s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
   will-change: transform;
 }
 
@@ -121,9 +119,7 @@
   width: 100%;
   height: auto;
   display: block;
-  transition:
-    transform 0.4s ease,
-    opacity 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.4s ease;
 }
 
 .movie-card:hover img {
