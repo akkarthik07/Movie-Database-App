@@ -15,6 +15,7 @@ class Upcoming extends Component {
   state = {
     movies: [],
     apiStatus: apiStatusConstants.initial,
+    currentPage: 1,
   }
 
   componentDidMount() {
@@ -22,9 +23,10 @@ class Upcoming extends Component {
   }
 
   getUpcomingMovies = async () => {
+    const {currentPage} = this.state
     this.setState({apiStatus: apiStatusConstants.inProgress})
     const API_KEY = '9b5f0be98627628678783d2149fd5d5c'
-    const apiUrl = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`
+    const apiUrl = `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${currentPage}`
     const options = {
       method: 'GET',
     }
@@ -45,6 +47,32 @@ class Upcoming extends Component {
     }
   }
 
+  onNextPage = () => {
+    this.setState(
+      prevState => ({currentPage: prevState.currentPage + 1}),
+      this.getUpcomingMovies,
+    )
+  }
+
+  onPrevPage = () => {
+    this.setState(
+      prevState => {
+        // Only decrement if currentPage > 1
+        if (prevState.currentPage > 1) {
+          return {currentPage: prevState.currentPage - 1}
+        }
+        return null // No state change if already on page 1
+      },
+      () => {
+        // Call API only if currentPage changed
+        const {currentPage} = this.state
+        if (currentPage > 0) {
+          this.getUpcomingMovies()
+        }
+      },
+    )
+  }
+
   renderLoadingView = () => (
     <div className="loader-container" data-testid="loader">
       <Loader type="TailSpin" color="#3B82F6" height="50" width="50" />
@@ -52,7 +80,7 @@ class Upcoming extends Component {
   )
 
   renderSuccess = () => {
-    const {movies} = this.state
+    const {movies, currentPage} = this.state
 
     return (
       <div className="home-container">
@@ -61,6 +89,19 @@ class Upcoming extends Component {
           {movies.map(movie => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
+        </div>
+        <div className="pagination">
+          <button
+            type="button"
+            onClick={this.onPrevPage}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <p className="page-number">{currentPage}</p>
+          <button type="button" onClick={this.onNextPage}>
+            Next
+          </button>
         </div>
       </div>
     )
